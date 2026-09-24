@@ -35,7 +35,11 @@ Scanning sends the address to the Bodyguard server so that server can fetch the 
 
 The interface and scanner must be hosted together by a server that runs Node.js or Docker. The included `Dockerfile` is ready to build a container. On a container host, configure the service to use its supplied `PORT` and set `TRUST_PROXY=1` only when the host sits behind its own trusted reverse proxy. Allow outbound DNS and HTTPS so scans can reach public sites. Use the host's HTTPS URL for the public website.
 
-GitHub stores the source code; GitHub Pages alone cannot run `server.mjs`, so a Pages URL would show the interface without a working scanner backend. The current workspace has not been connected to a public source repository or hosting account yet.
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2Fshrishikshayatanschool-noxelle%2Fjam_journey)
+
+To make your own public scanner URL, click **Deploy to Render**, sign in or create a Render account, review the `bodyguard-ai` web service, then click **Apply**. Render builds the Dockerfile and gives the service an `onrender.com` HTTPS address that anyone can open. The free service may sleep when unused and take a short time to wake on the next visit. The service is created in your Render account; the repository only stores the code and deployment settings.
+
+GitHub stores the source code; GitHub Pages alone cannot run `server.mjs`, so a Pages URL would show the interface without a working scanner backend. The Render button above deploys both the interface and scanner server together.
 
 ## Files
 
