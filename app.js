@@ -162,13 +162,14 @@
     input.focus();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-  document.querySelectorAll('[data-sample]').forEach((button) => {
-    button.addEventListener('click', () => {
-      input.value = button.dataset.sample || '';
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      input.focus();
-      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
+  const threatListToggle = $('#toggle-threat-list');
+  const threatList = $('#threat-list');
+  threatListToggle.addEventListener('click', () => {
+    const isOpen = threatListToggle.getAttribute('aria-expanded') === 'true';
+    threatListToggle.setAttribute('aria-expanded', String(!isOpen));
+    threatList.hidden = isOpen;
+    text('#threat-list-label', isOpen ? 'Show safe test list' : 'Hide safe test list');
+    text('#threat-list-chevron', isOpen ? '⌄' : '⌃');
   });
 })();
 
