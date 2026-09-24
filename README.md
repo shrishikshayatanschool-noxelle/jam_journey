@@ -17,7 +17,7 @@ The service binds to `127.0.0.1` by default, so it is only available on your com
 
 Without `SAFE_BROWSING_API_KEY`, Bodyguard cannot check Google's known phishing and malware URL lists. In that state it reports results as **incomplete / unverified**, rather than claiming the link is safe. For a public Render service, add keys under **Render Dashboard → bodyguard-ai → Environment** (keep them server-side; never place them in `app.js`, `index.html`, GitHub, or a public message):
 
-- `SAFE_BROWSING_API_KEY` — Google Safe Browsing API key. Enable the Safe Browsing API for a Google Cloud project and create a key. The API is for non-commercial use and should be used according to Google's terms.
+- `SAFE_BROWSING_API_KEY` — Google Safe Browsing API key. The scanner uses v4 `threatLists` plus `threatMatches:find` for direct URL lookups and falls back to the v5 URL search endpoint if v4 is unavailable. Enable the Safe Browsing API for a Google Cloud project and create a key. The API is for non-commercial use and should be used according to Google's terms.
 - `GEMINI_API_KEY` — optional Gemini API key from Google AI Studio. Gemini uses URL Context to review supported public HTML, text, JSON, CSS, JavaScript, images, and PDF URLs. This is a supplementary AI review, not a malware reputation database, and it can make mistakes.
 - `GEMINI_MODEL` — optional; defaults to `gemini-3.8-flash`.
 
@@ -37,7 +37,7 @@ Results say **dangerous**, **suspicious**, **caution**, **incomplete / unverifie
 
 ## Important coverage limits
 
-The scanner does not execute the target site's JavaScript or render its layout. Dynamic overlays and behaviors that require a browser session can therefore be missed. Gemini URL Context can review supported public content types when enabled, but it does not turn this app into a browser extension and cannot guarantee a site is safe. Safe Browsing checks known listed threats; newly created or unlisted threats may not appear. Do not treat the result as a substitute for browser protections.
+The v4 `threatListUpdates:fetch` endpoint is for clients that maintain a local, persistent hash database and apply encoded list deltas (with additional full-hash checks). This web service uses the direct Lookup API instead; calling the update endpoint alone would not check a URL. The scanner does not execute the target site's JavaScript or render its layout. Dynamic overlays and behaviors that require a browser session can therefore be missed. Gemini URL Context can review supported public content types when enabled, but it does not turn this app into a browser extension and cannot guarantee a site is safe. Safe Browsing checks known listed threats; newly created or unlisted threats may not appear. Do not treat the result as a substitute for browser protections.
 
 Scanning sends the address to the Bodyguard server so that server can fetch the page. The app does not save scan history. When configured, the submitted address is sent to Google Safe Browsing and/or Gemini as described above. The server refuses private/reserved IP ranges, nonstandard ports, userinfo URLs, and redirects into private networks. It caps response size, request time, scan concurrency, and scan frequency.
 
