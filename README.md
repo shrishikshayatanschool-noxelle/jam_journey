@@ -1,6 +1,6 @@
 # Bodyguard — live website safety checker
 
-Bodyguard lets a user paste a public website address and get a live, evidence-based risk report before opening that site. Unlike the earlier controlled demonstration, scans now fetch the address the user enters and inspect its public HTTP response and HTML.
+Bodyguard lets a user paste a public website address and get a risk report before opening that site. It follows public redirects, checks Google Safe Browsing when configured, and inspects static HTML and supported public content through Gemini when configured. It accepts a bare domain (`example.com`) or a full URL.
 
 ## Start it
 
@@ -13,6 +13,16 @@ Requirements: Node.js 18 or later. The scanner has no third-party package depend
 
 The service binds to `127.0.0.1` by default, so it is only available on your computer. It fetches public pages through its own backend; opening `index.html` directly with `file://` will not run a scan.
 
+## Connect real reputation and AI checks
+
+Without `SAFE_BROWSING_API_KEY`, Bodyguard cannot check Google's known phishing and malware URL lists. In that state it reports results as **incomplete / unverified**, rather than claiming the link is safe. For a public Render service, add keys under **Render Dashboard → bodyguard-ai → Environment** (keep them server-side; never place them in `app.js`, `index.html`, GitHub, or a public message):
+
+- `SAFE_BROWSING_API_KEY` — Google Safe Browsing API key. Enable the Safe Browsing API for a Google Cloud project and create a key. The API is for non-commercial use and should be used according to Google's terms.
+- `GEMINI_API_KEY` — optional Gemini API key from Google AI Studio. Gemini uses URL Context to review supported public HTML, text, JSON, CSS, JavaScript, images, and PDF URLs. This is a supplementary AI review, not a malware reputation database, and it can make mistakes.
+- `GEMINI_MODEL` — optional; defaults to `gemini-3.8-flash`.
+
+After saving Render environment variables, Render restarts the service. Use the deployed site and look at the **Google Safe Browsing** and **Gemini page review** rows to see which checks actually completed. A blocked or unavailable check is not a clean result. Google may receive submitted URLs when Safe Browsing is enabled; Gemini may retrieve public URLs when its key is enabled. Avoid scanning private, signed, or access-token links.
+
 ## What it checks
 
 - HTTP versus HTTPS and whether the HTTPS certificate validates.
@@ -23,13 +33,13 @@ The service binds to `127.0.0.1` by default, so it is only available on your com
 - Page text that resembles prompt injection or requests for private agent data.
 - Punycode or IP-based addresses, password inputs sent over HTTP, security headers, scripts, and frames.
 
-Results say **dangerous**, **suspicious**, **caution**, or **no major page risks detected**, and show the evidence behind each signal. A clean scan is not a certificate of safety.
+Results say **dangerous**, **suspicious**, **caution**, **incomplete / unverified**, or **no listed threats or major page risks found**, and show the evidence behind each signal. A clean scan means only that configured checks found no known URL-list match and no major signals in the content they inspected; it is not a certificate of safety.
 
 ## Important coverage limits
 
-This version fetches the initial public HTML and does not execute the target site's JavaScript or render its layout. As a result, it cannot see traps that are created only after scripts run, external stylesheets, canvas or image-only content, or behavior that requires a browser session. It is a live static page inspector, not yet a Chrome interstitial or extension that guards navigation. It also does not query Google Safe Browsing, VirusTotal, or another malware/phishing reputation database. Do not treat the result as a substitute for browser protections.
+The scanner does not execute the target site's JavaScript or render its layout. Dynamic overlays and behaviors that require a browser session can therefore be missed. Gemini URL Context can review supported public content types when enabled, but it does not turn this app into a browser extension and cannot guarantee a site is safe. Safe Browsing checks known listed threats; newly created or unlisted threats may not appear. Do not treat the result as a substitute for browser protections.
 
-Scanning sends the address to the Bodyguard server so that server can fetch the page. The tool does not save scan history or forward the page to an external reputation service. The server refuses private/reserved IP ranges, nonstandard ports, userinfo URLs, and redirects into private networks. It caps response size, request time, scan concurrency, and scan frequency.
+Scanning sends the address to the Bodyguard server so that server can fetch the page. The app does not save scan history. When configured, the submitted address is sent to Google Safe Browsing and/or Gemini as described above. The server refuses private/reserved IP ranges, nonstandard ports, userinfo URLs, and redirects into private networks. It caps response size, request time, scan concurrency, and scan frequency.
 
 ## Publish / host it
 
