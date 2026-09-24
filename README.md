@@ -2,6 +2,20 @@
 
 Bodyguard lets a user paste a public website address and get a risk report before opening that site. It follows public redirects, checks Google Safe Browsing when configured, and inspects static HTML and supported public content through Gemini when configured. It accepts a bare domain (`example.com`) or a full URL.
 
+## The idea, simply
+
+Think of Bodyguard as a checkpoint before you open a link. It follows the route, checks Google's known-threat lists, looks for suspicious page signals, and shows what it found. It never promises that a site is completely safe. If an important check cannot run, the verdict is **incomplete / unverified**.
+
+The homepage presents that process as a four-stop adventure: **Follow the trail → Check the threat map → Inspect the scene → Choose your exit**. The sample buttons fill in an address; they do not open it or scan it until the user presses **Check link**.
+
+## Try it with sample addresses
+
+- **Malayalam news page:** <https://www.manoramaonline.com/>. This is an ordinary public Malayalam-language site to try the scan flow; a clean result is not a safety guarantee.
+- **Safe Browsing simulation:** <https://testsafebrowsing.appspot.com/s/malware.html>. This is a Google test page intended to trigger a malware warning in supported Safe Browsing checks. It is a simulation, not an actual malware download. Paste it into Bodyguard; do not click any download on that page.
+- **More Google test pages:** <https://testsafebrowsing.appspot.com/>. Google labels the pages there as test links for phishing, malware, and other browser warnings.
+
+Never use an actual malware or phishing website as a test. Use the Google test pages above.
+
 ## Start it
 
 Requirements: Node.js 18 or later. The scanner has no third-party package dependencies and needs outbound DNS and HTTP/HTTPS access to scan public sites.
