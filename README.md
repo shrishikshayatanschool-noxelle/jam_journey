@@ -8,13 +8,16 @@ Think of Bodyguard as a checkpoint before you open a link. It follows the route,
 
 The homepage presents that process as a four-stop adventure: **Follow the trail → Check the threat map → Inspect the scene → Choose your exit**. The sample buttons fill in an address; they do not open it or scan it until the user presses **Check link**.
 
-## Try it with sample addresses
+## Try it with safe malicious-link simulations
 
-- **Malayalam news page:** <https://www.manoramaonline.com/>. This is an ordinary public Malayalam-language site to try the scan flow; a clean result is not a safety guarantee.
-- **Safe Browsing simulation:** <https://testsafebrowsing.appspot.com/s/malware.html>. This is a Google test page intended to trigger a malware warning in supported Safe Browsing checks. It is a simulation, not an actual malware download. Paste it into Bodyguard; do not click any download on that page.
-- **More Google test pages:** <https://testsafebrowsing.appspot.com/>. Google labels the pages there as test links for phishing, malware, and other browser warnings.
+The homepage offers buttons for Google Safe Browsing test pages. They simulate unsafe content and are intended for testing; they are not real malware sites:
 
-Never use an actual malware or phishing website as a test. Use the Google test pages above.
+- **Malware test:** <https://testsafebrowsing.appspot.com/s/malware.html>
+- **Phishing test:** <https://testsafebrowsing.appspot.com/s/phishing.html>
+- **Unwanted software test:** <https://testsafebrowsing.appspot.com/s/unwanted.html>
+- **Google's complete test list:** <https://testsafebrowsing.appspot.com/>
+
+Choose a sample button, then press **Check link**. This scanner fetches the page for analysis. Do not click download links on a sample page, and never test with a real malware or phishing website.
 
 ## Start it
 
