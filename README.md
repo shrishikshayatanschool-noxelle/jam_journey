@@ -6,18 +6,18 @@ Bodyguard lets a user paste a public website address and get a risk report befor
 
 Think of Bodyguard as a checkpoint before you open a link. It follows the route, checks Google's known-threat lists, looks for suspicious page signals, and shows what it found. It never promises that a site is completely safe. If an important check cannot run, the verdict is **incomplete / unverified**.
 
-The homepage presents that process as a four-stop adventure: **Follow the trail → Check the threat map → Inspect the scene → Choose your exit**. The sample buttons fill in an address; they do not open it or scan it until the user presses **Check link**.
+The homepage presents that process as a four-stop adventure: **Follow the trail → Check the threat map → Inspect the scene → Choose your exit**. The threat test library expands to show plain-text example addresses; it does not navigate away or auto-fill the scan box.
 
 ## Try it with safe malicious-link simulations
 
-The homepage offers buttons for Google Safe Browsing test pages. They simulate unsafe content and are intended for testing; they are not real malware sites:
+The homepage has a **Show safe test list** control with plain-text Google Safe Browsing test addresses. They simulate unsafe content and are intended for testing; they are not real malware sites. The Safe Browsing lookup API checks addresses submitted by the user; it does not provide a public list of all live malicious URLs.
 
 - **Malware test:** <https://testsafebrowsing.appspot.com/s/malware.html>
 - **Phishing test:** <https://testsafebrowsing.appspot.com/s/phishing.html>
 - **Unwanted software test:** <https://testsafebrowsing.appspot.com/s/unwanted.html>
 - **Google's complete test list:** <https://testsafebrowsing.appspot.com/>
 
-Choose a sample button, then press **Check link**. This scanner fetches the page for analysis. Do not click download links on a sample page, and never test with a real malware or phishing website.
+Copy a sample address into the scan field and press **Check link**. This scanner fetches the page for analysis. Do not click download links on a sample page, and never test with a real malware or phishing website.
 
 ## Start it
 
