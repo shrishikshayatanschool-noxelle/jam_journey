@@ -1,0 +1,10 @@
+.git
+.codex
+.agents
+work
+outputs
+engine
+node_modules
+build
+*.log
+
