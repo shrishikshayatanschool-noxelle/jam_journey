@@ -19,6 +19,7 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
 const activeClients = new Map();
 const reputationCache = new Map();
+let threatListsCache = { expiresAt: 0, descriptors: null };
 let activeScans = 0;
 
 function getClientAddress(req) {
@@ -154,15 +155,21 @@ async function checkGoogleSafeBrowsing(url, signal) {
   if (!SAFE_BROWSING_API_KEY) return { status: 'unconfigured', threats: [] };
   const cached = reputationCache.get(url.href);
   if (cached && cached.expiresAt > Date.now()) return cached.result;
+  const v4Result = await checkGoogleSafeBrowsingV4(url, signal);
+  if (v4Result.status !== 'error') return v4Result;
+  return checkGoogleSafeBrowsingV5(url, signal, v4Result.detail);
+}
+
+async function checkGoogleSafeBrowsingV5(url, signal, fallbackReason = '') {
   const endpoint = new URL('https://safebrowsing.googleapis.com/v5/urls:search');
   endpoint.searchParams.set('key', SAFE_BROWSING_API_KEY);
   endpoint.searchParams.set('urls', url.href);
   try {
     const response = await fetch(endpoint, { signal: requestSignal(signal, 5_000), headers: { Accept: 'application/json' } });
     const body = await response.json().catch(() => ({}));
-    if (!response.ok) return { status: 'error', threats: [], detail: `Google Safe Browsing returned HTTP ${response.status}.` };
+    if (!response.ok) return { status: 'error', threats: [], version: 'v5', detail: `Google Safe Browsing v4 and v5 returned errors (v5 HTTP ${response.status}). ${fallbackReason}` };
     const threats = Array.isArray(body.threats) ? body.threats : [];
-    const result = { status: threats.length ? 'match' : 'clear', threats };
+    const result = { status: threats.length ? 'match' : 'clear', threats, version: 'v5' };
     const entry = { result, expiresAt: Date.now() + parseDurationMs(body.cacheDuration) };
     reputationCache.set(url.href, entry);
     if (reputationCache.size > 2_000) {
@@ -172,7 +179,62 @@ async function checkGoogleSafeBrowsing(url, signal) {
     return result;
   } catch (error) {
     if (signal?.aborted) throw error;
-    return { status: 'error', threats: [], detail: 'Google Safe Browsing could not be reached.' };
+    return { status: 'error', threats: [], version: 'v5', detail: `Google Safe Browsing v4 and v5 could not be reached. ${fallbackReason}` };
+  }
+}
+
+async function getV4ThreatLists(signal) {
+  if (threatListsCache.descriptors && threatListsCache.expiresAt > Date.now()) return threatListsCache.descriptors;
+  const endpoint = new URL('https://safebrowsing.googleapis.com/v4/threatLists');
+  endpoint.searchParams.set('key', SAFE_BROWSING_API_KEY);
+  try {
+    const response = await fetch(endpoint, { signal: requestSignal(signal, 5_000), headers: { Accept: 'application/json' } });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok || !Array.isArray(body.threatLists)) return null;
+    const supported = body.threatLists.filter((list) =>
+      list.threatEntryType === 'URL' && list.platformType === 'ANY_PLATFORM' &&
+      ['MALWARE', 'SOCIAL_ENGINEERING', 'UNWANTED_SOFTWARE', 'POTENTIALLY_HARMFUL_APPLICATION'].includes(list.threatType));
+    threatListsCache = { descriptors: supported, expiresAt: Date.now() + 24 * 60 * 60 * 1000 };
+    return supported;
+  } catch (error) {
+    if (signal?.aborted) throw error;
+    return null;
+  }
+}
+
+async function checkGoogleSafeBrowsingV4(url, signal, fallbackReason = '') {
+  const supportedLists = await getV4ThreatLists(signal);
+  const descriptors = supportedLists?.length ? supportedLists : [
+    { threatType: 'MALWARE', platformType: 'ANY_PLATFORM', threatEntryType: 'URL' },
+    { threatType: 'SOCIAL_ENGINEERING', platformType: 'ANY_PLATFORM', threatEntryType: 'URL' },
+  ];
+  const endpoint = new URL('https://safebrowsing.googleapis.com/v4/threatMatches:find');
+  endpoint.searchParams.set('key', SAFE_BROWSING_API_KEY);
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        client: { clientId: 'bodyguard-url-checker', clientVersion: '1.0' },
+        threatInfo: {
+          threatTypes: [...new Set(descriptors.map((list) => list.threatType))],
+          platformTypes: [...new Set(descriptors.map((list) => list.platformType))],
+          threatEntryTypes: [...new Set(descriptors.map((list) => list.threatEntryType))],
+          threatEntries: [{ url: url.href }],
+        },
+      }),
+      signal: requestSignal(signal, 5_000),
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) return { status: 'error', threats: [], version: 'v4', detail: `Google Safe Browsing v4 returned HTTP ${response.status}${fallbackReason ? ` after ${fallbackReason}` : ''}.` };
+    const threats = Array.isArray(body.matches) ? body.matches.map((match) => ({ threatTypes: [match.threatType].filter(Boolean), threat: match })) : [];
+    const result = { status: threats.length ? 'match' : 'clear', threats, version: 'v4' };
+    const entry = { result, expiresAt: Date.now() + 60_000 };
+    reputationCache.set(url.href, entry);
+    return result;
+  } catch (error) {
+    if (signal?.aborted) throw error;
+    return { status: 'error', threats: [], version: 'v4', detail: `Google Safe Browsing v4 could not be reached${fallbackReason ? ` after ${fallbackReason}` : ''}.` };
   }
 }
 
@@ -401,9 +463,9 @@ function addFinding(findings, id, severity, title, detail, evidence, points) {
 function securityChecks(url, response, redirectCount, pageStats, reputation, geminiReview, tlsVerified, pageInspected) {
   const headers = response?.headers || {};
   const reputationDetail = reputation.status === 'clear'
-    ? 'Google Safe Browsing returned no listed threat for this address at scan time. This does not prove the site is safe.'
+    ? `Google Safe Browsing ${reputation.version || ''} returned no listed threat for this address at scan time. This does not prove the site is safe.`
     : reputation.status === 'match'
-      ? 'Google Safe Browsing lists this address as a potential threat. See the warning and threat types below.'
+      ? `Google Safe Browsing ${reputation.version || ''} lists this address as a potential threat. See the warning and threat types below.`
       : reputation.status === 'error'
         ? reputation.detail || 'The reputation lookup failed; the address could not be checked against the list.'
         : 'No URL reputation provider is configured. This link is unverified.';
