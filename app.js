@@ -162,5 +162,13 @@
     input.focus();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+  document.querySelectorAll('[data-sample]').forEach((button) => {
+    button.addEventListener('click', () => {
+      input.value = button.dataset.sample || '';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.focus();
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
 })();
 
