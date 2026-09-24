@@ -102,7 +102,7 @@
     const banner = $('#result-banner');
     banner.className = `result-banner banner-${level}`;
     $('#result-symbol').textContent = level === 'dangerous' ? '!' : level === 'suspicious' || level === 'caution' ? '△' : level === 'no-major-issues' ? '✓' : '?';
-    text('#result-kicker', level === 'dangerous' ? 'HIGH RISK · DO NOT CONTINUE' : level === 'suspicious' ? 'SUSPICIOUS · USE CAUTION' : level === 'caution' ? 'CAUTION · REVIEW THE DETAILS' : level === 'no-major-issues' ? 'NO MAJOR PAGE RISKS DETECTED' : 'SCAN INCOMPLETE');
+    text('#result-kicker', level === 'dangerous' ? 'HIGH RISK · DO NOT CONTINUE' : level === 'suspicious' ? 'SUSPICIOUS · USE CAUTION' : level === 'caution' ? 'CAUTION · REVIEW THE DETAILS' : level === 'no-major-issues' ? 'NO LISTED THREATS OR MAJOR PAGE RISKS FOUND' : 'INCOMPLETE · NOT VERIFIED SAFE');
     text('#result-title', report.title);
     text('#result-summary', report.summary);
     text('#result-host', report.host);
@@ -114,6 +114,8 @@
     for (const finding of report.findings || []) findings.append(renderFinding(finding));
     const hasFindings = (report.findings || []).length > 0;
     $('#no-findings').hidden = hasFindings;
+    text('#no-findings-title', level === 'incomplete' ? 'This link is unverified' : 'No high-risk patterns were found by the configured checks');
+    text('#no-findings-detail', level === 'incomplete' ? 'A reputation source or full page inspection was unavailable. Do not treat this as a safe result.' : 'No scan can guarantee that an unfamiliar website is safe.');
     text('#finding-count', hasFindings ? `${report.findings.length} SIGNAL${report.findings.length === 1 ? '' : 'S'}` : '0 SIGNALS');
     renderChecks(report.checks);
     result.hidden = false;
