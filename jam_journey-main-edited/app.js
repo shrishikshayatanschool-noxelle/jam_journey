@@ -4,8 +4,8 @@
   const $ = (selector) => document.querySelector(selector);
   const themeToggle = $('#theme-toggle');
   const themeMeta = document.querySelector('meta[name="theme-color"]');
-  const themeStorageKey = 'bodyguard-theme';
-  let activeTheme = localStorage.getItem(themeStorageKey) === 'light' ? 'light' : 'dark';
+  const themeStorageKey = 'bodyguard-theme-v2';
+  let activeTheme = localStorage.getItem(themeStorageKey) === 'dark' ? 'dark' : 'light';
 
   function applyTheme(theme) {
     activeTheme = theme;
@@ -15,7 +15,7 @@
     themeToggle.setAttribute('aria-pressed', String(theme === 'light'));
     themeToggle.querySelector('.theme-label').textContent = `${nextTheme[0].toUpperCase()}${nextTheme.slice(1)} mode`;
     themeToggle.querySelector('.theme-icon').textContent = theme === 'dark' ? '☼' : '☾';
-    themeMeta?.setAttribute('content', theme === 'dark' ? '#0b0e13' : '#f4f7f3');
+    themeMeta?.setAttribute('content', theme === 'dark' ? '#27373b' : '#cad3c7');
   }
 
   applyTheme(activeTheme);
