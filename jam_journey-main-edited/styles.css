@@ -83,3 +83,71 @@
 @media(max-width:570px){.top-status{display:none}.theme-toggle{padding:5px 7px;font-size:8px}.source-link{font-size:8px}}
 
 :root[data-theme="light"] .ai-assessment{background:#f2f7ef;border-color:#d8e5d2;color:#47594a}:root[data-theme="light"] .ai-assessment b{color:#426a3f}:root[data-theme="light"] .ai-assessment p,:root[data-theme="light"] .ai-assessment small{color:#5d6d5f}
+
+
+/* Palette refresh inspired by the supplied sage and deep-teal swatches */
+:root{
+  --bg:#27373b;
+  --panel:#304c4e;
+  --panel2:#3e625c;
+  --line:#668a7b;
+  --text:#f0f3ed;
+  --muted:#cad3c7;
+  --lime:#cad3c7;
+}
+:root:not([data-theme="light"]) body{
+  background:
+    radial-gradient(ellipse at 12% 14%,#4e786d88 0,transparent 31rem),
+    radial-gradient(ellipse at 89% 38%,#81a98b35 0,transparent 29rem),
+    radial-gradient(ellipse at 55% 100%,#4e786d42 0,transparent 34rem),
+    linear-gradient(135deg,#27373b 0%,#304c4e 53%,#27373b 100%);
+}
+:root:not([data-theme="light"]) body:before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.14;
+  background-image:radial-gradient(#cad3c7 0.7px,transparent 0.7px);
+  background-size:24px 24px;
+}
+:root:not([data-theme="light"]) .topbar{
+  background:#27373beF;border-bottom-color:#81a98b55;
+  box-shadow:0 5px 24px #17262938;
+}
+:root:not([data-theme="light"]) .top-status{color:#cad3c7}
+:root:not([data-theme="light"]) .top-status i{background:#81a98b;box-shadow:0 0 10px #81a98b88}
+:root:not([data-theme="light"]) .hero{
+  border-bottom-color:#81a98b55;
+  background:radial-gradient(ellipse at 84% 45%,#81a98b1b,transparent 43%);
+}
+:root:not([data-theme="light"]) .eyebrow{color:#cad3c7}
+:root:not([data-theme="light"]) .eyebrow span{background:#81a98b}
+:root:not([data-theme="light"]) .orbit{border-color:#81a98b55}
+:root:not([data-theme="light"]) .orbit-b{border-color:#cad3c733}
+:root:not([data-theme="light"]) .orbit-dot{background:#cad3c7;box-shadow:0 0 12px #81a98b}
+:root:not([data-theme="light"]) .dot-b{background:#81a98b}
+:root:not([data-theme="light"]) .dot-c{background:#cad3c7}
+:root:not([data-theme="light"]) .orb-core{color:#cad3c7;filter:drop-shadow(0 0 25px #81a98b55)}
+:root:not([data-theme="light"]) .scanner-card{
+  background:linear-gradient(135deg,#304c4ef2,#273b3df5 62%,#3d6259e8);
+  border-color:#81a98b99;box-shadow:0 16px 48px #14242766,0 1px 0 #cad3c733 inset;
+}
+:root:not([data-theme="light"]) .scanner-symbol{background:#4e786d;border-color:#81a98b;color:#f0f3ed}
+:root:not([data-theme="light"]) .privacy-chip{border-color:#81a98b77;color:#cad3c7}
+:root:not([data-theme="light"]) .privacy-chip span{background:#81a98b}
+:root:not([data-theme="light"]) .url-entry{background:#27373b;border-color:#81a98b88}
+:root:not([data-theme="light"]) .url-entry:focus-within{border-color:#cad3c7;box-shadow:0 0 0 3px #81a98b44}
+:root:not([data-theme="light"]) .url-entry button{background:#cad3c7;color:#27373b}
+:root:not([data-theme="light"]) .url-entry button:hover{background:#e2e8df}
+:root:not([data-theme="light"]) .loading-card{background:linear-gradient(110deg,#304c4e,#3c6058);border-color:#81a98b88}
+:root:not([data-theme="light"]) .scan-spinner{border-color:#81a98b55;border-top-color:#cad3c7}
+:root:not([data-theme="light"]) .feature-grid article{
+  background:linear-gradient(145deg,#304c4e,#273b3e);
+  border-color:#81a98b66;box-shadow:0 8px 24px #14262933;
+}
+:root:not([data-theme="light"]) .feature-icon.green{background:#4e786d;color:#f0f3ed}
+:root:not([data-theme="light"]) .feature-icon.orange{background:#81a98b;color:#27373b}
+:root:not([data-theme="light"]) .feature-icon.violet{background:#cad3c7;color:#304c4e}
+:root:not([data-theme="light"]) footer{border-top-color:#81a98b55}
+:root:not([data-theme="light"]) .footer-shield{color:#cad3c7}
+:root:not([data-theme="light"]) .theme-toggle{border-color:#81a98b88;background:#304c4e;color:#f0f3ed}
+:root:not([data-theme="light"]) .theme-toggle:hover{border-color:#cad3c7;background:#4e786d}
+:root:not([data-theme="light"]) .theme-icon{color:#cad3c7}
+:root:not([data-theme="light"]) .form-hint span{color:#cad3c7}
