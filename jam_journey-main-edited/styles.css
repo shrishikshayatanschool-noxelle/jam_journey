@@ -224,3 +224,9 @@
 :root[data-theme="light"] .theme-toggle{background:#cad3c7;border-color:#4e786d;color:#27373b}
 :root[data-theme="light"] .theme-toggle:hover{background:#81a98b;border-color:#304c4e}
 :root[data-theme="light"] .theme-icon{color:#304c4e}
+
+
+/* Slow shield protection rotation */
+.orb-core{animation:shield-protection-rotate 18s linear infinite;transform-origin:50% 50%}
+@keyframes shield-protection-rotate{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.orb-core{animation:none}}
