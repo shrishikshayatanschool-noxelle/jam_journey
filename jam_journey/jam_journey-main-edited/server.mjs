@@ -168,6 +168,14 @@ function parseDurationMs(value) {
   return Number.isFinite(seconds) && seconds > 0 ? Math.min(seconds * 1000, 24 * 60 * 60 * 1000) : 60_000;
 }
 
+function providerErrorDetail(body, apiKey) {
+  const message = String(body?.error?.message || '')
+    .replaceAll(apiKey, '[redacted]')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return message ? ` Google says: ${message.slice(0, 240)}` : '';
+}
+
 async function checkGoogleSafeBrowsing(url, signal) {
   if (!SAFE_BROWSING_API_KEY) return { status: 'unconfigured', threats: [] };
   const cached = reputationCache.get(url.href);
@@ -184,7 +192,7 @@ async function checkGoogleSafeBrowsingV5(url, signal, fallbackReason = '') {
   try {
     const response = await fetch(endpoint, { signal: requestSignal(signal, 5_000), headers: { Accept: 'application/json' } });
     const body = await response.json().catch(() => ({}));
-    if (!response.ok) return { status: 'error', threats: [], version: 'v5', detail: `Google Safe Browsing v4 and v5 returned errors (v5 HTTP ${response.status}). ${fallbackReason}` };
+    if (!response.ok) return { status: 'error', threats: [], version: 'v5', detail: `Google Safe Browsing v4 and v5 returned errors (v5 HTTP ${response.status}).${providerErrorDetail(body, SAFE_BROWSING_API_KEY)} ${fallbackReason}` };
     const threats = Array.isArray(body.threats) ? body.threats : [];
     const result = { status: threats.length ? 'match' : 'clear', threats, version: 'v5' };
     const entry = { result, expiresAt: Date.now() + parseDurationMs(body.cacheDuration) };
@@ -243,7 +251,7 @@ async function checkGoogleSafeBrowsingV4(url, signal, fallbackReason = '') {
       signal: requestSignal(signal, 5_000),
     });
     const body = await response.json().catch(() => ({}));
-    if (!response.ok) return { status: 'error', threats: [], version: 'v4', detail: `Google Safe Browsing v4 returned HTTP ${response.status}${fallbackReason ? ` after ${fallbackReason}` : ''}.` };
+    if (!response.ok) return { status: 'error', threats: [], version: 'v4', detail: `Google Safe Browsing v4 returned HTTP ${response.status}.${providerErrorDetail(body, SAFE_BROWSING_API_KEY)}${fallbackReason ? ` after ${fallbackReason}` : ''}` };
     const threats = Array.isArray(body.matches) ? body.matches.map((match) => ({ threatTypes: [match.threatType].filter(Boolean), threat: match })) : [];
     const result = { status: threats.length ? 'match' : 'clear', threats, version: 'v4' };
     const entry = { result, expiresAt: Date.now() + 60_000 };
@@ -298,7 +306,7 @@ async function reviewWithGemini(url, signal) {
       signal: requestSignal(signal, 10_000),
     });
     const result = await response.json().catch(() => ({}));
-    if (!response.ok) return { status: 'error', findings: [], detail: `Gemini returned HTTP ${response.status}; its page review was not completed.` };
+    if (!response.ok) return { status: 'error', findings: [], detail: `Gemini returned HTTP ${response.status}.${providerErrorDetail(result, GEMINI_API_KEY)} The page review was not completed.` };
     const candidate = result.candidates?.[0];
     const metadata = candidate?.url_context_metadata?.url_metadata || [];
     if (metadata.some((entry) => /UNSAFE/.test(entry.url_retrieval_status || ''))) {
