@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b0e13" />
+  <meta name="description" content="Check a URL for scam and phishing signals with Gemini AI and live page safety checks." />
+  <title>Bodyguard — Website safety checker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="#home" aria-label="Bodyguard home"><span class="shield-logo" aria-hidden="true"><svg viewBox="0 0 32 36" fill="none"><path d="M16 2 29 7v9c0 8.2-5.3 14.7-13 18C8.3 30.7 3 24.2 3 16V7l13-5Z" stroke="currentColor" stroke-width="2"/><path d="m10 17 4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>bodyguard<span class="brand-dot">.</span></span></a><div class="top-status"><i></i> LINK SAFETY CHECKER</div><button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☼</span><span class="theme-label">Light mode</span></button><a class="source-link" href="README.md">How it works <span>↗</span></a></header>
+  <main id="home">
+    <section class="hero"><div class="hero-copy"><div class="eyebrow"><span></span>THE SAFETY LAYER BEFORE THE CLICK</div><h1>Know what’s on<br/>the other side of <em>that link.</em></h1><p>Paste a website address. When configured, Gemini reviews a limited snapshot of page text and navigation alongside Bodyguard’s redirect and security checks.</p></div><div class="shield-art" aria-hidden="true"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="orb-core"><svg viewBox="0 0 70 78" fill="none"><path d="M35 3 64 14v20c0 18.2-11.8 32.7-29 40C17.8 66.7 6 52.2 6 34V14L35 3Z" stroke="currentColor" stroke-width="2.5"/><path d="m22 37 9 9 18-20" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="orbit-dot dot-a"></span><span class="orbit-dot dot-b"></span><span class="orbit-dot dot-c"></span></div></section>
+
+    <section class="scan-route" aria-label="How Bodyguard checks a link">
+      <div class="route-heading"><span class="route-pulse"></span><span>ONE LINK · FOUR CHECKPOINTS</span></div>
+      <ol>
+        <li><span class="route-index">01</span><span class="route-icon" aria-hidden="true">↗</span><span class="route-copy"><b>Trace</b><small>Where it leads</small></span></li>
+        <li><span class="route-index">02</span><span class="route-icon" aria-hidden="true">⌖</span><span class="route-copy"><b>Check</b><small>Known threats</small></span></li>
+        <li><span class="route-index">03</span><span class="route-icon" aria-hidden="true">⌕</span><span class="route-copy"><b>Inspect</b><small>Page signals</small></span></li>
+        <li><span class="route-index">04</span><span class="route-icon" aria-hidden="true">✓</span><span class="route-copy"><b>Explain</b><small>Clear findings</small></span></li>
+      </ol>
+    </section>
+
+    <section class="scanner-card" aria-labelledby="scan-title"><div class="scanner-heading"><div class="scanner-symbol">⌕</div><div><h2 id="scan-title">Check a website</h2><p>We’ll inspect the URL and live page before you visit it.</p></div><span class="privacy-chip"><span></span>NO ACCOUNT NEEDED</span></div><form id="scan-form" novalidate><label class="url-label" for="url-input">WEBSITE ADDRESS</label><div class="url-entry"><span class="url-prefix">↗</span><input id="url-input" name="url" type="text" inputmode="url" placeholder="Paste a link, e.g. www.example.com" autocomplete="url" spellcheck="false" required/><button id="scan-button" type="submit"><span class="button-shield">⬡</span><span>Check link</span><span class="button-arrow">→</span></button></div><div class="form-hint"><span>⌑</span> HTTPS is added automatically when you enter a domain without a scheme.</div><div class="sample-row" aria-label="Try a sample URL"><span>Quick try</span><button type="button" data-fill-url="https://example.com/">example.com <span>↗</span></button></div><p class="form-error" id="form-error" role="alert" hidden></p></form></section>
+
+    <section class="loading-card" id="loading-card" hidden aria-live="polite"><div class="scan-spinner"></div><div><b id="loading-title">Checking the website…</b><span id="loading-step">Looking up the public address and checking the connection.</span></div><span class="loading-elapsed" id="loading-elapsed">0s</span></section>
+
+    <section class="result" id="result" hidden aria-live="polite" aria-atomic="true"><div class="result-banner" id="result-banner"><div class="result-symbol" id="result-symbol"></div><div class="result-message"><div class="result-kicker" id="result-kicker"></div><h2 id="result-title"></h2><p id="result-summary"></p></div><div class="result-host" id="result-host"></div></div><div class="result-body"><div class="result-meta"><span id="checked-url"></span><span id="scan-time"></span></div><section class="findings-section"><div class="section-heading"><div><h3>What we found</h3><p>Signals collected from the live page and its connection.</p></div><span class="finding-count" id="finding-count"></span></div><div class="findings" id="findings"></div><div class="no-findings" id="no-findings" hidden><span>✓</span><div><b>No high-risk page patterns detected</b><small>This is a limited scan, not a guarantee that the site is safe.</small></div></div></section><section class="connection-section"><div class="section-heading"><div><h3>Connection &amp; page checks</h3><p>Technical details about the page Bodyguard inspected.</p></div></div><div class="check-grid" id="check-grid"></div></section><details class="limits"><summary>What this scan can and can’t tell you</summary><p>Bodyguard fetches the public page and applies local security heuristics. It does not execute the site’s JavaScript, use a commercial malware or phishing reputation database, or certify a site as safe. “No major issues found” means this scan did not observe its listed warning signs; stay cautious with unfamiliar sites.</p></details><button class="scan-another" id="scan-another" type="button">Check another link <span>↗</span></button></div></section>
+
+    <section class="test-lab" aria-labelledby="test-lab-title">
+      <div class="lab-header"><div><span class="lab-kicker">SAFE TEST DRIVE</span><h2 id="test-lab-title">Try the scanner on a few links</h2><p>These buttons fill the checker; they do not open the websites.</p></div><span class="lab-stamp" aria-hidden="true">DEMO<br/>01—03</span></div>
+      <div class="test-list">
+        <article class="test-card"><span class="test-number">01</span><div class="test-copy"><b>Reserved example domain</b><small>A simple baseline scan. This domain is reserved for examples.</small></div><span class="test-tag tag-safe">SAFE SAMPLE</span><button type="button" data-fill-url="https://example.com/">Use in scanner <span>↗</span></button></article>
+        <article class="test-card"><span class="test-number">02</span><div class="test-copy"><b>Google homepage</b><small>A familiar HTTPS site to compare with the baseline.</small></div><span class="test-tag tag-live">KNOWN SITE</span><button type="button" data-fill-url="https://www.google.com/">Use in scanner <span>↗</span></button></article>
+        <article class="test-card test-card-alert"><span class="test-number">03</span><div class="test-copy"><b>Google Safe Browsing test page</b><small>Purpose-built phishing detection test. Submit it here; do not open it directly.</small></div><span class="test-tag tag-test">TEST ONLY</span><button type="button" data-fill-url="http://testsafebrowsing.appspot.com/s/phishing.html">Use in scanner <span>↗</span></button></article>
+      </div>
+      <p id="test-feedback" aria-live="polite">Choose a sample to fill the checker, then press “Check link”.</p>
+      <p class="lab-note"><span aria-hidden="true">ⓘ</span> Test results depend on which reputation and AI services are configured. The Google test page is designed to be flagged by Safe Browsing.</p>
+    </section>
+
+    <section class="rating-card" aria-labelledby="rating-title">
+      <div class="rating-mark" aria-hidden="true">✳</div><div class="rating-copy"><span class="lab-kicker">YOUR SIGNAL MATTERS</span><h2 id="rating-title">Was this scan helpful?</h2><p>Rate your experience so you can remember how the tool felt to use.</p></div>
+      <div class="rating-control"><div class="rating-stars" role="group" aria-label="Rate your experience from one to five stars">
+        <button type="button" data-rating="1" aria-label="1 star" aria-pressed="false">★</button><button type="button" data-rating="2" aria-label="2 stars" aria-pressed="false">★</button><button type="button" data-rating="3" aria-label="3 stars" aria-pressed="false">★</button><button type="button" data-rating="4" aria-label="4 stars" aria-pressed="false">★</button><button type="button" data-rating="5" aria-label="5 stars" aria-pressed="false">★</button>
+      </div><p id="rating-feedback" aria-live="polite">Choose a rating</p></div>
+      <span class="rating-privacy">Saved only in this browser</span>
+    </section>
+
+    <footer><span><span class="footer-shield">⬡</span> BODYGUARD <i>·</i> WEBSITE SAFETY CHECKER</span><span>Page content is scanned for this request and not stored.</span></footer>
+  </main>
+  <script src="app.js" defer></script>
+</body>
+</html>
+
