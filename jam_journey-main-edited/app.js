@@ -24,7 +24,6 @@
     localStorage.setItem(themeStorageKey, nextTheme);
     applyTheme(nextTheme);
   });
-
   const form = $('#scan-form');
   const input = $('#url-input');
   const submit = $('#scan-button');
@@ -125,44 +124,20 @@
     const banner = $('#result-banner');
     banner.className = `result-banner banner-${level}`;
     $('#result-symbol').textContent = level === 'dangerous' ? '!' : level === 'suspicious' || level === 'caution' ? '△' : level === 'no-major-issues' ? '✓' : '?';
-    text('#result-kicker', level === 'dangerous' ? 'HIGH RISK · DO NOT CONTINUE' : level === 'suspicious' ? 'SUSPICIOUS · USE CAUTION' : level === 'caution' ? 'CAUTION · REVIEW THE DETAILS' : level === 'no-major-issues' ? 'NO MAJOR PAGE RISKS DETECTED' : 'SCAN INCOMPLETE');
+    text('#result-kicker', level === 'dangerous' ? 'HIGH RISK · DO NOT CONTINUE' : level === 'suspicious' ? 'SUSPICIOUS · USE CAUTION' : level === 'caution' ? 'CAUTION · REVIEW THE DETAILS' : level === 'no-major-issues' ? 'NO LISTED THREATS OR MAJOR PAGE RISKS FOUND' : 'INCOMPLETE · NOT VERIFIED SAFE');
     text('#result-title', report.title);
     text('#result-summary', report.summary);
     text('#result-host', report.host);
     text('#checked-url', report.finalUrl || report.url);
     text('#scan-time', `Checked ${new Date(report.checkedAt).toLocaleString()}`);
 
-    let aiCard = document.querySelector('#ai-assessment');
-    if (!aiCard) {
-      aiCard = document.createElement('section');
-      aiCard.id = 'ai-assessment';
-      aiCard.className = 'ai-assessment';
-      document.querySelector('.result-meta').after(aiCard);
-    }
-    aiCard.replaceChildren();
-    if (report.aiAssessment) {
-      const heading = document.createElement('b');
-      heading.textContent = report.aiAssessment.status === 'complete'
-        ? `Gemini URL check · ${report.aiAssessment.verdict.toUpperCase()} · ${report.aiAssessment.confidence}% confidence`
-        : 'Gemini URL check';
-      const detail = document.createElement('p');
-      detail.textContent = report.aiAssessment.status === 'complete'
-        ? report.aiAssessment.summary
-        : report.aiAssessment.message || 'AI URL analysis was unavailable.';
-      aiCard.append(heading, detail);
-      if (report.aiAssessment.indicators?.length) {
-        const indicators = document.createElement('small');
-        indicators.textContent = `Indicators: ${report.aiAssessment.indicators.join(' · ')}`;
-        aiCard.append(indicators);
-      }
-      aiCard.hidden = false;
-    } else aiCard.hidden = true;
-
     const findings = $('#findings');
     findings.replaceChildren();
     for (const finding of report.findings || []) findings.append(renderFinding(finding));
     const hasFindings = (report.findings || []).length > 0;
     $('#no-findings').hidden = hasFindings;
+    text('#no-findings-title', level === 'incomplete' ? 'This link is unverified' : 'No high-risk patterns were found by the configured checks');
+    text('#no-findings-detail', level === 'incomplete' ? 'A reputation source or full page inspection was unavailable. Do not treat this as a safe result.' : 'No scan can guarantee that an unfamiliar website is safe.');
     text('#finding-count', hasFindings ? `${report.findings.length} SIGNAL${report.findings.length === 1 ? '' : 'S'}` : '0 SIGNALS');
     renderChecks(report.checks);
     result.hidden = false;
@@ -209,5 +184,32 @@
     input.focus();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+  document.querySelectorAll('[data-sample]').forEach((button) => {
+    button.addEventListener('click', () => {
+      input.value = button.dataset.sample || '';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.focus();
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+  const ratingStars = [...document.querySelectorAll('.rating-star')];
+  const ratingFeedback = $('#rating-feedback');
+  const savedRating = Number(localStorage.getItem('bodyguard-rating') || 0);
+  function paintRating(value) {
+    ratingStars.forEach((star) => {
+      const selected = Number(star.dataset.rating) <= value;
+      star.classList.toggle('is-selected', selected);
+      star.setAttribute('aria-pressed', String(Number(star.dataset.rating) === value));
+    });
+  }
+  if (savedRating) {
+    paintRating(savedRating);
+    ratingFeedback.textContent = `Thanks for rating us ${savedRating}/5`;
+  }
+  ratingStars.forEach((star) => star.addEventListener('click', () => {
+    const value = Number(star.dataset.rating);
+    localStorage.setItem('bodyguard-rating', String(value));
+    paintRating(value);
+    ratingFeedback.textContent = `Thanks for rating us ${value}/5`;
+  }));
 })();
-
