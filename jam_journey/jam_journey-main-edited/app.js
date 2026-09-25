@@ -24,6 +24,17 @@
     localStorage.setItem(themeStorageKey, nextTheme);
     applyTheme(nextTheme);
   });
+  const threatList = $('#threat-list');
+  const threatListToggle = $('#toggle-threat-list');
+  const threatListLabel = $('#threat-list-label');
+  const threatListChevron = $('#threat-list-chevron');
+  threatListToggle.addEventListener('click', () => {
+    const expanded = threatListToggle.getAttribute('aria-expanded') === 'true';
+    threatListToggle.setAttribute('aria-expanded', String(!expanded));
+    threatList.hidden = expanded;
+    threatListLabel.textContent = expanded ? 'Show safe test list' : 'Hide safe test list';
+    threatListChevron.textContent = expanded ? '⌄' : '⌃';
+  });
   const form = $('#scan-form');
   const input = $('#url-input');
   const submit = $('#scan-button');
