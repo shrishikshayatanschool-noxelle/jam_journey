@@ -151,3 +151,76 @@
 :root:not([data-theme="light"]) .theme-toggle:hover{border-color:#cad3c7;background:#4e786d}
 :root:not([data-theme="light"]) .theme-icon{color:#cad3c7}
 :root:not([data-theme="light"]) .form-hint span{color:#cad3c7}
+
+
+/* Bright sage and teal theme from the supplied colour palette */
+:root[data-theme="light"] body{
+ background:
+  radial-gradient(ellipse at 12% 12%,#81a98b99 0,transparent 32rem),
+  radial-gradient(ellipse at 90% 42%,#4e786d3d 0,transparent 30rem),
+  linear-gradient(135deg,#cad3c7 0%,#e7ece4 48%,#81a98b66 100%);
+ color:#27373b;
+}
+:root[data-theme="light"] .topbar{
+ background:#81a98bf2;border-bottom-color:#4e786d88;
+ box-shadow:0 5px 22px #27373b20;
+}
+:root[data-theme="light"] .brand{color:#27373b}
+:root[data-theme="light"] .brand-dot,:root[data-theme="light"] .shield-logo{color:#304c4e}
+:root[data-theme="light"] .top-status{color:#304c4e}
+:root[data-theme="light"] .top-status i{background:#4e786d;box-shadow:0 0 9px #304c4e66}
+:root[data-theme="light"] .source-link{color:#27373b}
+:root[data-theme="light"] .source-link span{color:#304c4e}
+:root[data-theme="light"] .hero{
+ border-bottom-color:#4e786d66;
+ background:radial-gradient(ellipse at 82% 50%,#81a98b66,transparent 48%);
+}
+:root[data-theme="light"] .eyebrow{color:#304c4e}
+:root[data-theme="light"] .eyebrow span{background:#4e786d}
+:root[data-theme="light"] h1{color:#27373b}
+:root[data-theme="light"] h1 em{color:#4e786d}
+:root[data-theme="light"] .hero-copy p{color:#304c4e}
+:root[data-theme="light"] .orbit{border-color:#4e786d77}
+:root[data-theme="light"] .orbit-b{border-color:#81a98b}
+:root[data-theme="light"] .orb-core{color:#304c4e;filter:drop-shadow(0 0 18px #4e786d55)}
+:root[data-theme="light"] .orbit-dot{background:#304c4e;box-shadow:0 0 10px #4e786d88}
+:root[data-theme="light"] .dot-b{background:#4e786d}
+:root[data-theme="light"] .dot-c{background:#81a98b}
+:root[data-theme="light"] .scanner-card{
+ background:linear-gradient(135deg,#f5f7f2,#cad3c7 58%,#81a98b70);
+ border-color:#4e786d99;box-shadow:0 15px 40px #27373b24,0 1px #fff9 inset;
+}
+:root[data-theme="light"] .scanner-symbol{background:#4e786d;border-color:#304c4e;color:#f4f6f1}
+:root[data-theme="light"] .scanner-heading h2{color:#27373b}
+:root[data-theme="light"] .scanner-heading p{color:#304c4e}
+:root[data-theme="light"] .privacy-chip{border-color:#4e786d99;color:#304c4e}
+:root[data-theme="light"] .privacy-chip span{background:#4e786d}
+:root[data-theme="light"] .url-label{color:#304c4e}
+:root[data-theme="light"] .url-entry{background:#f8faf6;border-color:#4e786d}
+:root[data-theme="light"] .url-entry:focus-within{border-color:#304c4e;box-shadow:0 0 0 3px #81a98b77}
+:root[data-theme="light"] .url-prefix{color:#4e786d}
+:root[data-theme="light"] .url-entry button{background:#304c4e;color:#f3f5ef}
+:root[data-theme="light"] .url-entry button:hover{background:#4e786d;color:#fff}
+:root[data-theme="light"] .form-hint{color:#304c4e}
+:root[data-theme="light"] .form-hint span{color:#4e786d}
+:root[data-theme="light"] .loading-card{background:linear-gradient(110deg,#cad3c7,#81a98b66);border-color:#4e786d}
+:root[data-theme="light"] .loading-card b{color:#27373b}
+:root[data-theme="light"] .loading-card>div:nth-child(2)>span{color:#304c4e}
+:root[data-theme="light"] .scan-spinner{border-color:#4e786d66;border-top-color:#304c4e}
+:root[data-theme="light"] .feature-grid article{
+ background:linear-gradient(145deg,#e9eee6,#cad3c7);
+ border-color:#4e786d77;box-shadow:0 8px 22px #27373b18;
+}
+:root[data-theme="light"] .feature-grid article:nth-child(2){background:linear-gradient(145deg,#cad3c7,#81a98b66)}
+:root[data-theme="light"] .feature-grid article:nth-child(3){background:linear-gradient(145deg,#dfe8df,#81a98b55)}
+:root[data-theme="light"] .feature-icon.green{background:#4e786d;color:#fff}
+:root[data-theme="light"] .feature-icon.orange{background:#81a98b;color:#27373b}
+:root[data-theme="light"] .feature-icon.violet{background:#304c4e;color:#cad3c7}
+:root[data-theme="light"] .feature-grid h3{color:#27373b}
+:root[data-theme="light"] .feature-grid p{color:#304c4e}
+:root[data-theme="light"] footer{border-top-color:#4e786d77;color:#304c4e}
+:root[data-theme="light"] footer>span:last-child{color:#304c4e}
+:root[data-theme="light"] .footer-shield{color:#304c4e}
+:root[data-theme="light"] .theme-toggle{background:#cad3c7;border-color:#4e786d;color:#27373b}
+:root[data-theme="light"] .theme-toggle:hover{background:#81a98b;border-color:#304c4e}
+:root[data-theme="light"] .theme-icon{color:#304c4e}
