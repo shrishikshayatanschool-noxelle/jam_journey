@@ -14,7 +14,7 @@ Requirements: Node.js 18 or later, outbound DNS and HTTP/HTTPS access to inspect
 2. Open a terminal in the project folder.
 3. Copy `.env.example` to `.env` and set `GEMINI_API_KEY` (Gemini analysis is omitted if no key is set).
 4. Run `node server.mjs`.
-5. Open <http://localhost:4173> and paste a public website address.
+5. Open <https://bodyguard-ai.onrender.com/> and paste a public website address.
 
 The service binds to `127.0.0.1` by default, so it is only available on your computer. It fetches public pages through its own backend; opening `index.html` directly with `file://` will not run a scan.
 
